@@ -10,7 +10,6 @@ allFiles.forEach(function(filePath) {
   processFile(`${filePath.replace(componentSourceDir, '')}`);
 });
 
-
 function getFiles(dir, files_) {
   files_ = files_ || [];
   var files = fs.readdirSync(dir);
@@ -38,7 +37,6 @@ function createTemplateFile(outputFilePath) {
   var sourceComponentHbs = `${sourceComponentHbsPath.split('.').slice(0, -1).join('.')}.hbs`;
   var outPutPath = `${addonPath}/addon/templates/components/${addonComponentPath}${outputFilePath}`;
   outPutDestination = `${outPutPath.split('.').slice(0, -1).join('.')}.hbs`;
-  // console.log(outPutDestination);
   var directoryPath = outPutDestination.split('/').slice(0, -1).join('/');
   mkdirP(directoryPath);
   copyFile(sourceComponentHbs, outPutDestination);
@@ -66,7 +64,7 @@ function createAddonFile(contents, outputFilePath) {
       refIndex = index;
     }
   });
-  var nestedLevels = `${addonComponentPath}${outputFilePath}`.split('/').length + 1;
+  var nestedLevels = `${addonComponentPath}${outputFilePath}`.split('/').length;
   var outPutDestination = `${addonPath}/addon/components/${addonComponentPath}${outputFilePath}`;
   var levelsUp = '../'.repeat(nestedLevels);
   
