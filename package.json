@@ -1,5 +1,5 @@
 {
-  "name": "generate-ember-addon-app-components",
+  "name": "ember-app-to-addon-component-migration",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
