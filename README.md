@@ -10,9 +10,9 @@ It takes an optional third argument- the the path within the addon's components 
 
 ## Usage
 
-`mpm install`
+`npm install`
 
-`node index.js [path-ember-app-component-directory] [path-to-root-of-ember-addon] [path-within-addon's-components-directory]`
+`node move-components-from-app-to-addon [path-ember-app-component-directory] [path-to-root-of-ember-addon] [path-within-addon's-components-directory]`
 
 ## Example
 
@@ -20,4 +20,22 @@ You have an Ember app named `my-ember-app` and an Ember addon named `ember-form-
 
 You want move all of the components in `my-ember-app/app/components/form-controls` into the addon `ember-form-controls`, at the path `components/widgets/tools/form-controls.`
 
-`node index.js my-ember-app/app/components/form-controls ember-0form-controls widgets/tools/form-controls`
+`node move-components-from-app-to-addon my-ember-app/app/components/form-controls ember-form-controls widgets/tools/form-controls`
+
+#Ember addon component renaming
+
+## What does it do?
+
+It simply updates the paths of the specified files to the specified new paths. It also updates the import statements in the addon component file as well as the app component file.
+
+## Usage
+
+`node rename-addon-component [path-to-addon-root-directory] [path-to-addon-components-to-be-moved] [new-path-for-components]`
+
+Note that `path-to-addon-components-to-be-moved` and `new-path-for-components` are both relative to the components directory.
+
+## Example
+
+You have an Ember addon named `ember-form-controls`, and you want to move everything in `components/form-controls` to `components/widgets/tools/form-controls`.
+
+`node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls`
