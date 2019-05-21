@@ -42,3 +42,5 @@ Note that `path-to-addon-components-to-be-moved` and `new-path-for-components` a
 You have an Ember addon named `ember-form-controls`, and you want to move everything in `components/form-controls` to `components/widgets/tools/form-controls`.
 
 `node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls`
+
+node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/my-organisation hyrax-ember-assets/janus/my-organisation

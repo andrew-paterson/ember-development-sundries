@@ -24,9 +24,10 @@ var componentFileVersions = [
 var allFiles = [];
 
 componentFileVersions.forEach(componentFileVersion => {
-  componentFileVersion.currentPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
-  componentFileVersion.newPath =  `${addonPath}/${componentFileVersion.rootPath}/${destinationLocation}`;
-  var test = getFiles(componentFileVersion.currentPath).map(item => {
+  var currentPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
+  var newPath =  `${addonPath}/${componentFileVersion.rootPath}/${destinationLocation}`;
+  // console.log(newPath);
+  var pathObjects = getFiles(currentPath).map(item => {
     return {
       oldPath: item,
       newPath: item.replace(currentLocation, destinationLocation),
@@ -34,12 +35,14 @@ componentFileVersions.forEach(componentFileVersion => {
       rootPath: componentFileVersion.rootPath
     };
   });
-  allFiles = allFiles.concat(test);
+  allFiles = allFiles.concat(pathObjects);
 });
 
 allFiles.forEach(file => {
   if (fs.existsSync(file.oldPath) && !fs.existsSync(file.newPath)) {
-    var dirPath = `${addonPath}/${file.rootPath}/${destinationLocation}`;
+    var filePathParts = file.newPath.split('/');
+    var dirPath = filePathParts.slice(0, -1).join('/');
+    console.log(dirPath);
     mkdirP(dirPath);
     fs.renameSync(file.oldPath, file.newPath);
     console.log(`Moved ${file.newPath}`);
@@ -50,7 +53,10 @@ allFiles.forEach(file => {
     updateAppImport(file);
   }
 });
-
+componentFileVersions.forEach(componentFileVersion => {
+  var oldPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
+  cleanEmptyFoldersRecursively(oldPath);
+});
 function removeTrailingSlash(inputPath) {
   var lastChar = inputPath[inputPath.length -1];
   return lastChar === '/' ? inputPath.slice(0, -1) : inputPath;
@@ -115,4 +121,30 @@ function getFiles(dir, files_) {
     }
   }
   return files_;
+}
+
+function cleanEmptyFoldersRecursively(folder) {
+  var fs = require('fs');
+  var path = require('path');
+
+  var isDir = fs.statSync(folder).isDirectory();
+  if (!isDir) {
+    return;
+  }
+  var files = fs.readdirSync(folder);
+  if (files.length > 0) {
+    files.forEach(function(file) {
+      var fullPath = path.join(folder, file);
+      cleanEmptyFoldersRecursively(fullPath);
+    });
+
+    // re-evaluate files; after deleting subfolder
+    // we may have parent folder empty now
+    files = fs.readdirSync(folder);
+  }
+
+  if (files.length == 0) {
+    fs.rmdirSync(folder);
+    return;
+  }
 }
