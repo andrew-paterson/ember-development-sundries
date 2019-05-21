@@ -1,14 +1,19 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-var componentSourceDir = process.argv[2];
-var addonPath = process.argv[3];
-var addonComponentPath = process.argv[4];
+var componentSourceDir = removeTrailingSlash(process.argv[2]);
+var addonPath = removeTrailingSlash(process.argv[3]);
+var addonComponentPath = removeTrailingSlash(process.argv[4]);
 var addonName = addonPath.split('/')[addonPath.split('/').length - 1];
 var allFiles = getFiles(componentSourceDir);
 
 allFiles.forEach(function(filePath) {
   processFile(`${filePath.replace(componentSourceDir, '')}`);
 });
+
+function removeTrailingSlash(inputPath) {
+  var lastChar = inputPath[inputPath.length -1];
+  return lastChar === '/' ? inputPath.slice(0, -1) : inputPath;
+}
 
 function getFiles(dir, files_) {
   files_ = files_ || [];
@@ -81,7 +86,7 @@ function createAddonFile(contents, outputFilePath) {
     if (err) {
       return console.log(err);
     }
-    console.log(`addon/components${addonComponentPath}${outputFilePath} was saved!`);
+    console.log(`addon/components/${addonComponentPath}${outputFilePath} was saved!`);
   });
 }
 
@@ -94,8 +99,6 @@ function mkdirP(dirPath) {
 }
 
 function copyFile(source, target, cb) {
-  console.log(source);
-  console.log(target);
   var cbCalled = false;
 
   var rd = fs.createReadStream(source);

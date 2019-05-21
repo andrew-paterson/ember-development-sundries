@@ -12,7 +12,10 @@ It takes an optional third argument- the the path within the addon's components 
 
 `npm install`
 
-`node move-components-from-app-to-addon [path-ember-app-component-directory] [path-to-root-of-ember-addon] [path-within-addon's-components-directory]`
+`node move-components-from-app-to-addon [path-to-ember-app-component-directory] [path-to-root-of-ember-addon] [path-within-addons-components-directory]`
+
+node move-components-from-app-to-addon ../../../../hyraxbio/exatype-ngs-ui/app/components/route-specific/jobs/new/ngs/ ../../../../hyraxbio/ember-addons/hyrax-ember-assets/ hyrax-ember-assets/exatype/ngs/jobs/new 
+
 
 ## Example
 
