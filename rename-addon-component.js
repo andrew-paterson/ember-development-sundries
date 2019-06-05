@@ -25,8 +25,8 @@ var allFiles = [];
 
 componentFileVersions.forEach(componentFileVersion => {
   var currentPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
-  var newPath =  `${addonPath}/${componentFileVersion.rootPath}/${destinationLocation}`;
-  // console.log(newPath);
+  // var newPath =  `${addonPath}/${componentFileVersion.rootPath}/${destinationLocation}`;
+
   var pathObjects = getFiles(currentPath).map(item => {
     return {
       oldPath: item,
@@ -42,10 +42,9 @@ allFiles.forEach(file => {
   if (fs.existsSync(file.oldPath) && !fs.existsSync(file.newPath)) {
     var filePathParts = file.newPath.split('/');
     var dirPath = filePathParts.slice(0, -1).join('/');
-    console.log(dirPath);
     mkdirP(dirPath);
     fs.renameSync(file.oldPath, file.newPath);
-    console.log(`Moved ${file.newPath}`);
+    // console.log(`Moved ${file.newPath}`);
   }
   if (file.type === 'addonJS') {
     updateAddonTemplateImport(file);
@@ -53,10 +52,22 @@ allFiles.forEach(file => {
     updateAppImport(file);
   }
 });
-componentFileVersions.forEach(componentFileVersion => {
-  var oldPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
-  cleanEmptyFoldersRecursively(oldPath);
+// componentFileVersions.forEach(componentFileVersion => {
+//   var oldPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
+//   cleanEmptyFoldersRecursively(oldPath);
+// });
+var dirs = [];
+allFiles.forEach(file => {
+  var fileParts = file.oldPath.split('/');
+  var dirPath = fileParts.slice(0, fileParts.length-1).join('/');
+  if (dirs.indexOf(dirPath) < 0) {
+    dirs.push(dirPath);
+  }
 });
+dirs.forEach(dirPath => {
+  cleanEmptyFoldersRecursively(dirPath);
+});
+
 function removeTrailingSlash(inputPath) {
   var lastChar = inputPath[inputPath.length -1];
   return lastChar === '/' ? inputPath.slice(0, -1) : inputPath;
@@ -111,16 +122,29 @@ function mkdirP(dirPath) {
 
 function getFiles(dir, files_) {
   files_ = files_ || [];
-  var files = fs.readdirSync(dir);
-  for (var i in files) {
-    var name = dir + '/' + files[i];
-    if (fs.statSync(name).isDirectory()) {
-      getFiles(name, files_);
-    } else {
-      files_.push(name);
+  var files;
+  try {
+    files = fs.readdirSync(dir);
+    for (var i in files) {
+      var name = dir + '/' + files[i];
+      if (fs.statSync(name).isDirectory()) {
+        getFiles(name, files_);
+      } else {
+        files_.push(name);
+      }
     }
-  }
-  return files_;
+    return files_;
+  } catch (err) {
+    var extension = dir.indexOf('addon/templates/components') > -1 ? '.hbs' : '.js';
+
+    try {
+      fs.readFileSync(`${dir}${extension}`);
+      files_.push(`${dir}${extension}`);
+      return files_;
+    } catch (err) {
+      console.log('ERROR: The path provided is neither a directory or a file.');
+    }
+  } 
 }
 
 function cleanEmptyFoldersRecursively(folder) {
