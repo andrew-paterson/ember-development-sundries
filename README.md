@@ -45,3 +45,8 @@ You have an Ember addon named `ember-form-controls`, and you want to move everyt
 
 `node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls`
 
+node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls
+node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/sanger/jobs/new/samples-table/samples-table hyrax-ember-assets/exatype/sanger/jobs/new/samples-table/samples-table-container
+
+addon/components/hyrax-ember-assets/exatype/ngs/jobs/new/samples-list/samples-list.js
+/Users/andrewpaterson/hyraxbio/ember-addons/hyrax-ember-assets/addon/templates/components/hyrax-ember-assets/exatype/ngs/jobs/new/samples-list

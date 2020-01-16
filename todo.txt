@@ -1,1 +1,7 @@
 Stop if destination file exists, and display message
+
+node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/sanger/chromatogram-edit-links hyrax-ember-assets/exatype/sanger/chromatograms/chromatogram-edit-links
+
+node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/header-bar hyrax-ember-assets/exatype/header
+
+addon/components/hyrax-ember-assets/exatype/header.js
