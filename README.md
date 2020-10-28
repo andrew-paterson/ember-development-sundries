@@ -30,7 +30,7 @@ You want move all of the components in `my-ember-app/app/components/form-control
 
 It simply updates the paths of the specified files to the specified new paths. It also updates the import statements in the addon component file as well as the app component file.
 
-It accepts either a directory path, or a file path. When passing a file path, the file extension must be omitted.
+It accepts either a directory path, or a file path. When renaming a single file, the file extension must be included- any one of the three component files can be used. The app will find the related files based on the naming conventions of Ember addons
 
 ## Usage
 

@@ -4,6 +4,7 @@ var addonPath = removeTrailingSlash(process.argv[2]);
 var currentLocation = removeTrailingSlash(process.argv[3]);
 var destinationLocation = removeTrailingSlash(process.argv[4]);
 var addonName = addonPath.split('/')[addonPath.split('/').length - 1];
+const chalk = require('chalk');
 
 var componentFileVersions = [
   {
@@ -24,9 +25,14 @@ var componentFileVersions = [
 var allFiles = [];
 
 componentFileVersions.forEach(componentFileVersion => {
+  if (componentFileVersion.type === 'addonHBS') {
+    currentLocation = currentLocation.replace('.js', '.hbs');
+    destinationLocation = destinationLocation.replace('.js', '.hbs');
+  } else {
+    currentLocation = currentLocation.replace('.hbs', '.js');
+    destinationLocation = destinationLocation.replace('.hbs', '.js');
+  }
   var currentPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
-  // var newPath =  `${addonPath}/${componentFileVersion.rootPath}/${destinationLocation}`;
-
   var pathObjects = getFiles(currentPath).map(item => {
     return {
       oldPath: item,
@@ -38,13 +44,14 @@ componentFileVersions.forEach(componentFileVersion => {
   allFiles = allFiles.concat(pathObjects);
 });
 
+
 allFiles.forEach(file => {
   if (fs.existsSync(file.oldPath) && !fs.existsSync(file.newPath)) {
     var filePathParts = file.newPath.split('/');
     var dirPath = filePathParts.slice(0, -1).join('/');
     mkdirP(dirPath);
     fs.renameSync(file.oldPath, file.newPath);
-    // console.log(`Moved ${file.newPath}`);
+    console.log(`${chalk.blue(file.oldPath.replace(addonPath, ''))} => \n${chalk.cyan(file.newPath.replace(addonPath, ''))}\n -----------------------`);
   }
   if (file.type === 'addonJS') {
     updateAddonTemplateImport(file);
@@ -52,10 +59,7 @@ allFiles.forEach(file => {
     updateAppImport(file);
   }
 });
-// componentFileVersions.forEach(componentFileVersion => {
-//   var oldPath = `${addonPath}/${componentFileVersion.rootPath}/${currentLocation}`;
-//   cleanEmptyFoldersRecursively(oldPath);
-// });
+
 var dirs = [];
 allFiles.forEach(file => {
   var fileParts = file.oldPath.split('/');
@@ -95,7 +99,7 @@ function updateAddonTemplateImport(file) {
       if (err) {
         return console.log(err);
       }
-      console.log(`${file.newPath} was saved!`);
+      console.log(chalk.green(`Updated layout import statement in ${file.newPath}`));
     });
   });
 }
@@ -108,7 +112,7 @@ function updateAppImport(file) {
     if (err) {
       return console.log(err);
     }
-    console.log(`${file.newPath} was saved!`);
+    console.log(chalk.green(`Updated app export statement in ${file.newPath}.`));
   });
 }
 
@@ -120,13 +124,14 @@ function mkdirP(dirPath) {
   });
 }
 
-function getFiles(dir, files_) {
+function getFiles(path, files_) {
   files_ = files_ || [];
   var files;
   try {
-    files = fs.readdirSync(dir);
-    for (var i in files) {
-      var name = dir + '/' + files[i];
+    if (fs.statSync(path).isDirectory()) {
+      files = fs.readdirSync(path);
+      for (var i in files) {
+      var name = path + '/' + files[i];
       if (fs.statSync(name).isDirectory()) {
         getFiles(name, files_);
       } else {
@@ -134,16 +139,21 @@ function getFiles(dir, files_) {
       }
     }
     return files_;
-  } catch (err) {
-    var extension = dir.indexOf('addon/templates/components') > -1 ? '.hbs' : '.js';
-
-    try {
-      fs.readFileSync(`${dir}${extension}`);
-      files_.push(`${dir}${extension}`);
-      return files_;
-    } catch (err) {
-      console.log('ERROR: The path provided is neither a directory or a file.');
+    } else {
+      return [path];
     }
+    
+  } catch (err) {
+    console.log(chalk.red(err));
+    // var extension = path.indexOf('addon/templates/components') > -1 ? '.hbs' : '.js';
+
+    // try {
+    //   fs.readFileSync(`${path}${extension}`);
+    //   files_.push(`${path}${extension}`);
+    //   return files_;
+    // } catch (err) {
+    //   console.log(chalk.red('ERROR: The path provided is neither a directory or a file.'));
+    // }
   } 
 }
 
