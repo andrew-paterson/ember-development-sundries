@@ -14,8 +14,7 @@ It takes an optional third argument- the the path within the addon's components 
 
 `node move-components-from-app-to-addon [path-to-ember-app-component-directory] [path-to-root-of-ember-addon] [path-within-addons-components-directory]`
 
-node move-components-from-app-to-addon ../../../../hyraxbio/exatype-ngs-ui/app/components/route-specific/jobs/new/ngs/ ../../../../hyraxbio/ember-addons/hyrax-ember-assets/ hyrax-ember-assets/exatype/ngs/jobs/new 
-
+node move-components-from-app-to-addon ../../../../hyraxbio/hyrax_admin_frontend/app/components/blocks/generic/ ../../../../Documents/development/ember-addons/ember-interactive-table/ / 
 
 ## Example
 
@@ -25,7 +24,7 @@ You want move all of the components in `my-ember-app/app/components/form-control
 
 `node move-components-from-app-to-addon my-ember-app/app/components/form-controls ember-form-controls widgets/tools/form-controls`
 
-#Ember addon component renaming
+# Ember addon component renaming
 
 ## What does it do?
 
@@ -46,7 +45,29 @@ You have an Ember addon named `ember-form-controls`, and you want to move everyt
 `node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls`
 
 node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls
-node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/sanger/jobs/new/samples-table/samples-table hyrax-ember-assets/exatype/sanger/jobs/new/samples-table/samples-table-container
+
+node rename-addon-component ../../../../hyraxbio/ember-upgrades/hyrax-ember-assets hyrax-ember-assets/exatype/sars-cov-2 hyrax-ember-assets/exatype/sars-cov-two
 
 addon/components/hyrax-ember-assets/exatype/ngs/jobs/new/samples-list/samples-list.js
 /Users/andrewpaterson/hyraxbio/ember-addons/hyrax-ember-assets/addon/templates/components/hyrax-ember-assets/exatype/ngs/jobs/new/samples-list
+
+# Prefix vars
+
+TODO - ignore glob for replace doesn't work.
+
+`node prefix-vars path-to-vars-object target-directory-path`
+
+node prefix-vars /Users/andrewpaterson/hyraxbio/ember-upgrades/exatype-sanger-ui/tests/element-selectors/general.js /Users/andrewpaterson/hyraxbio/ember-upgrades/exatype-sanger-ui/tests generalSelectors
+
+# Prune test files
+
+Moves test files comprised only of the Ember boilerplate to a directory named `pruned-tests` at the root of the project directory.
+
+`node prune-component-test-files path-to-ember-project`
+
+node prune-component-test-files /Users/andrewpaterson/hyraxbio/ember-addons/hyrax-ember-assets
+
+
+# Serialise JSON API to Mirage Fixture
+
+node serialise-json-api-to-mirage-fixture ./trash-2.json ./out.json

@@ -2,6 +2,17 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 
 module.exports = {
+  logJSToFile(outPut, filePath) {
+    if (!outPut) { return; }
+    fs.writeFile(filePath, JSON.stringify(outPut, null, 2), function(err) {
+      if(err) {
+        console.log(err);
+        return err;
+      }
+      return `Success! ${filePath} was saved`;
+    });
+  },
+
   removeTrailingSlash(inputPath) {
     var lastChar = inputPath[inputPath.length -1];
     return lastChar === '/' ? inputPath.slice(0, -1) : inputPath;

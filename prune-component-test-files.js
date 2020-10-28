@@ -41,12 +41,10 @@ allFiles.forEach(filePath => {
   var defaultVersion = boilerPlate.replace(/testfileRelativePath/g, componentDeclaration);
   var fileContents = fs.readFileSync(filePath, 'utf8');
   if (lib.minifyText(defaultVersion) === lib.minifyText(fileContents)) {
-    var outputPath = `${emberTestPath}/pruned/${directoryPath}/${testfileRelativePath}`;
+    var outputPath = `${emberPath}/pruned-test-files/${directoryPath}/${testfileRelativePath}`;
     lib.mkdirP(path.dirname(outputPath));
-    if (fs.renameSync(filePath, outputPath)) {
-      console.log(`Pruned ${filePath}`);
-    }
-
+    fs.renameSync(filePath, outputPath);
+    console.log(`Pruned ${filePath}`);
   }
 });
 
