@@ -1,19 +1,16 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-var componentSourceDir = removeTrailingSlash(process.argv[2]);
-var addonPath = removeTrailingSlash(process.argv[3]);
-var addonComponentPath = removeTrailingSlash(process.argv[4]);
+const path = require('path');
+
+var componentSourceDir = path.resolve(process.argv[2]);
+var addonPath = path.resolve(process.argv[3]);
+var addonComponentPath = path.resolve(process.argv[4]);
 var addonName = addonPath.split('/')[addonPath.split('/').length - 1];
 var allFiles = getFiles(componentSourceDir);
 
 allFiles.forEach(function(filePath) {
   processFile(`${filePath.replace(componentSourceDir, '')}`);
 });
-
-function removeTrailingSlash(inputPath) {
-  var lastChar = inputPath[inputPath.length -1];
-  return lastChar === '/' ? inputPath.slice(0, -1) : inputPath;
-}
 
 function getFiles(dir, files_) {
   files_ = files_ || [];
@@ -38,26 +35,26 @@ function processFile(outputFilePath) {
 }
 
 function createTemplateFile(outputFilePath) {
-  var sourceComponentHbsPath = `${componentSourceDir}${outputFilePath}`.replace('app/components', 'app/templates/components');
+  var sourceComponentHbsPath = path.resolve(`${componentSourceDir}${outputFilePath}`.replace('app/components', 'app/templates/components'));
   var sourceComponentHbs = `${sourceComponentHbsPath.split('.').slice(0, -1).join('.')}.hbs`;
   var outPutPath = `${addonPath}/addon/templates/components/${addonComponentPath}${outputFilePath}`;
-  outPutDestination = `${outPutPath.split('.').slice(0, -1).join('.')}.hbs`;
+  outPutDestination = path.resolve(`${outPutPath.split('.').slice(0, -1).join('.')}.hbs`);
   var directoryPath = outPutDestination.split('/').slice(0, -1).join('/');
   mkdirP(directoryPath);
   copyFile(sourceComponentHbs, outPutDestination);
 }
 
 function createAppFile(outputFilePath) {
-  var string = `export { default } from '${addonName}/components/${addonComponentPath}${outputFilePath}';`;
+  var outPutDestination = path.resolve(`${addonPath}/app/components/${addonComponentPath}${outputFilePath}`);
+  var string = `export { default } from '${addonName}/components/${addonComponentPath}${outputFilePath}';`.replace(/\/\//g, '/');
   var final = string.replace('.js', '');
-  var outPutDestination = `${addonPath}/app/components/${addonComponentPath}${outputFilePath}`;
   var directoryPath = outPutDestination.split('/').slice(0, -1).join('/');
   mkdirP(directoryPath);
   fs.writeFile(outPutDestination, final, function(err) {
     if (err) {
       return console.log(err);
     }
-    console.log(`app/components/${addonComponentPath}${outputFilePath} was saved!`);
+    console.log(path.resolve(`app/components/${addonComponentPath}${outputFilePath}`) + ` was saved!`);
   });
 }
 
@@ -69,11 +66,13 @@ function createAddonFile(contents, outputFilePath) {
       refIndex = index;
     }
   });
-  var nestedLevels = `${addonComponentPath}${outputFilePath}`.split('/').length;
-  var outPutDestination = `${addonPath}/addon/components/${addonComponentPath}${outputFilePath}`;
+  console.log('level;')
+  console.log(path.resolve(`${addonComponentPath}${outputFilePath}`))
+  var nestedLevels = path.resolve(`${addonComponentPath}${outputFilePath}`).split('/').filter(item => item).length;
+  var outPutDestination = path.resolve(`${addonPath}/addon/components/${addonComponentPath}${outputFilePath}`);
   var levelsUp = '../'.repeat(nestedLevels);
-  
-  var string = `import layout from '${levelsUp}templates/components/${addonComponentPath}${outputFilePath}';`;
+
+  var string = `import layout from '${levelsUp}templates/components/${addonComponentPath}${outputFilePath}';`.replace(/\/\//g, '/');
 
   var newLineImport = string.replace('.js', '');
   lines.splice(refIndex - 1, 0, newLineImport);

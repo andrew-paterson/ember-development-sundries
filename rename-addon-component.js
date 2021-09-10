@@ -142,18 +142,8 @@ function getFiles(path, files_) {
     } else {
       return [path];
     }
-    
   } catch (err) {
     console.log(chalk.red(err));
-    // var extension = path.indexOf('addon/templates/components') > -1 ? '.hbs' : '.js';
-
-    // try {
-    //   fs.readFileSync(`${path}${extension}`);
-    //   files_.push(`${path}${extension}`);
-    //   return files_;
-    // } catch (err) {
-    //   console.log(chalk.red('ERROR: The path provided is neither a directory or a file.'));
-    // }
   } 
 }
 

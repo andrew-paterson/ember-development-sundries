@@ -5,3 +5,6 @@ node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets
 node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/header-bar hyrax-ember-assets/exatype/header
 
 addon/components/hyrax-ember-assets/exatype/header.js
+
+
+rename must clean empty dirs after individual files as well as whole directory renaming.

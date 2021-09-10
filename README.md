@@ -38,18 +38,19 @@ It accepts either a directory path, or a file path. When renaming a single file,
 
 Note that `path-to-addon-components-to-be-moved` and `new-path-for-components` are both relative to the components directory.
 
-## Example
+## Example - rename directory
 
 You have an Ember addon named `ember-form-controls`, and you want to move everything in `components/form-controls` to `components/widgets/tools/form-controls`.
 
 `node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls`
 
-node rename-addon-component ember-form-controls form-controls widgets/tools/form-controls
+## Example - rename single component
 
-node rename-addon-component ../../../../hyraxbio/ember-upgrades/hyrax-ember-assets hyrax-ember-assets/exatype/sars-cov-2 hyrax-ember-assets/exatype/sars-cov-two
+`node rename-addon-component ember-form-controls  widgets/tools/form-controls/form-controls/password.js widgets/tools/form-controls/password-field.js` 
 
-addon/components/hyrax-ember-assets/exatype/ngs/jobs/new/samples-list/samples-list.js
-/Users/andrewpaterson/hyraxbio/ember-addons/hyrax-ember-assets/addon/templates/components/hyrax-ember-assets/exatype/ngs/jobs/new/samples-list
+or
+
+`node rename-addon-component ember-form-controls  widgets/tools/form-controls/form-controls/password.hbs widgets/tools/form-controls/password-field.hbs`
 
 # Prefix vars
 

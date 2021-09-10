@@ -11,7 +11,7 @@
   "dependencies": {
     "camelcase": "^6.0.0",
     "chalk": "^4.1.0",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.5",
     "replace-in-file": "^5.0.2"
   }
 }
