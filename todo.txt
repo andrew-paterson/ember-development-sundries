@@ -2,9 +2,9 @@ Stop if destination file exists, and display message
 
 node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/sanger/chromatogram-edit-links hyrax-ember-assets/exatype/sanger/chromatograms/chromatogram-edit-links
 
-node rename-addon-component ../../../../hyraxbio/ember-addons/hyrax-ember-assets hyrax-ember-assets/exatype/header-bar hyrax-ember-assets/exatype/header
+node rename-addon-component /home/paddy/hyraxbio/hyrax-ember-assets hyrax-ember-assets/exatype/ngs/jobs/show/ngs-resistance-report.js hyrax-ember-assets/exatype/ngs/jobs/show/samples/ngs-resistance-report.js
 
 addon/components/hyrax-ember-assets/exatype/header.js
 
 
-rename must clean empty dirs after individual files as well as whole directory renaming.
+rename must clean empty dirs after individual files as well as whole directory renaming.<Jobs::Show::Samples::NgsSampleResults />

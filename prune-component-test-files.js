@@ -7,8 +7,8 @@ var allFiles = lib.getFiles(`${emberTestPath}/${directoryPath}`);
 var path = require('path');
 var fs = require('fs');
 
-var boilerPlate = `
-import { module, test } from 'qunit';
+var boilerPlate = [
+`import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
@@ -33,14 +33,42 @@ module('Integration | Component | testfileRelativePath', function(hooks) {
 
     assert.equal(this.element.textContent.trim(), 'template block text');
   });
-});`;
+});`,
+`import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
+import { render } from '@ember/test-helpers';
+import hbs from 'htmlbars-inline-precompile';
+
+module('Integration | Component | testfileRelativePath', function(hooks) {
+  setupRenderingTest(hooks);
+
+  test('it renders', async function(assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.set('myAction', function(val) { ... });
+
+    await render(hbs\`{{testfileRelativePath}}\`);
+
+    assert.dom(this.element).hasText('');
+
+    // Template block usage:
+    await render(hbs\`
+      {{#testfileRelativePath}}
+        template block text
+      {{/testfileRelativePath}}
+    \`);
+
+    assert.dom(this.element).hasText('template block text');
+  });
+});`
+];
 
 allFiles.forEach(filePath => {
   var testfileRelativePath = lib.removeLeadingSlash(filePath.replace(`${emberTestPath}/${directoryPath}`, ''));
   var componentDeclaration = `${path.dirname(testfileRelativePath)}/${path.basename(testfileRelativePath, '-test.js')}`;
-  var defaultVersion = boilerPlate.replace(/testfileRelativePath/g, componentDeclaration);
+  var defaultVersions = boilerPlate.map(item => item.replace(/testfileRelativePath/g, componentDeclaration));
   var fileContents = fs.readFileSync(filePath, 'utf8');
-  if (lib.minifyText(defaultVersion) === lib.minifyText(fileContents)) {
+  const boilerplateMatch = defaultVersions.find(defaultVersion => lib.minifyText(defaultVersion) === lib.minifyText(fileContents));
+  if (boilerplateMatch) {
     var outputPath = `${emberPath}/pruned-test-files/${directoryPath}/${testfileRelativePath}`;
     lib.mkdirP(path.dirname(outputPath));
     fs.renameSync(filePath, outputPath);

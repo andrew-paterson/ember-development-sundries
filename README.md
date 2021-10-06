@@ -62,7 +62,7 @@ node prefix-vars /Users/andrewpaterson/hyraxbio/ember-upgrades/exatype-sanger-ui
 
 # Prune test files
 
-Moves test files comprised only of the Ember boilerplate to a directory named `pruned-tests` at the root of the project directory.
+Moves test files comprised only of the Ember boilerplate to a directory named `pruned-tests` at the root of the project directory. Currently only works with integration tests
 
 `node prune-component-test-files path-to-ember-project`
 
