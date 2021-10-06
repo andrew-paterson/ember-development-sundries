@@ -19,8 +19,27 @@ module.exports = {
   },
 
   removeLeadingSlash(inputPath) {
-    var firstChar = inputPath[0];
-    return firstChar === '/' ? inputPath.substring(1) : inputPath;
+    if (inputPath.startsWith('/')) {
+      return inputPath.substring(1);
+    } else if (inputPath.startsWith('./')) {
+      return inputPath.substring(2);
+    } else {
+      return inputPath;
+    }
+  },
+
+  kebabToPascalCase(string) {
+    return string
+      .toLowerCase()
+      .split('-')
+      .map(it => it.charAt(0).toUpperCase() + it.substr(1))
+      .join('');
+  },
+
+  pathToAngleBracket(path) {
+    const parts = this.removeLeadingSlash(path).split('/');
+    const parsed = parts.map(part => this.kebabToPascalCase(part));
+    return parsed.join('::');
   },
 
   getFiles(dir, files_) {

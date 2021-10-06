@@ -59,13 +59,18 @@ module('Integration | Component | testfileRelativePath', function(hooks) {
 
     assert.dom(this.element).hasText('template block text');
   });
-});`
+});`,
 ];
 
 allFiles.forEach(filePath => {
   var testfileRelativePath = lib.removeLeadingSlash(filePath.replace(`${emberTestPath}/${directoryPath}`, ''));
-  var componentDeclaration = `${path.dirname(testfileRelativePath)}/${path.basename(testfileRelativePath, '-test.js')}`;
-  var defaultVersions = boilerPlate.map(item => item.replace(/testfileRelativePath/g, componentDeclaration));
+  var componentDeclaration = testfileRelativePath.replace('-test.js', '');
+  var angleComponentDeclaration = lib.pathToAngleBracket(componentDeclaration);
+  var defaultVersions = boilerPlate.map(item => item.replace(/testfileRelativePath/g, componentDeclaration))
+  .concat(boilerPlate.map(item => {
+    item = item.replace(/{{testfileRelativePath}}/g, `<${angleComponentDeclaration} />`).replace(/{{#testfileRelativePath}}/g, `<${angleComponentDeclaration}>`).replace(/{{\/testfileRelativePath}}/g, `</${angleComponentDeclaration}>`).replace(/testfileRelativePath/g, componentDeclaration);
+    return item
+  }));
   var fileContents = fs.readFileSync(filePath, 'utf8');
   const boilerplateMatch = defaultVersions.find(defaultVersion => lib.minifyText(defaultVersion) === lib.minifyText(fileContents));
   if (boilerplateMatch) {
@@ -73,7 +78,7 @@ allFiles.forEach(filePath => {
     lib.mkdirP(path.dirname(outputPath));
     fs.renameSync(filePath, outputPath);
     console.log(`Pruned ${filePath}`);
-  }
+  } 
 });
 
 lib.cleanEmptyFoldersRecursively(emberTestPath);
